@@ -24,6 +24,7 @@ class MayTinhTest {
     }
 
     @Test
+    @DisplayName("Tích của 5 và 6 bằng 30")
     void tich() {
         long expected = 30;
         long actual = mayTinh.tich(5, 6);
