@@ -5,4 +5,5 @@ public final class Const {
     }
 
     public final static double PI = 3.14159;
+
 }
