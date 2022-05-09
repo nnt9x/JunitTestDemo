@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,5 +48,84 @@ class HinhChuNhatTest2 {
                 );
         return tmp;
     }
+
+    // TH2: gợi ý: skip
+    static Stream<Arguments> dataValidChuVi() throws IOException {
+        Reader in = new FileReader("C:\\Users\\BKACAD\\IdeaProjects\\JunitTestDemo\\src\\test\\resources\\dataTest.csv");
+        Stream<Arguments> tmp = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in)
+                .stream()
+                .skip(3)
+                .map(r -> Arguments.of(r.get(COL_CHIEU_DAI), r.get(COL_CHIEU_RONG), r.get(COL_CHU_VI))
+                );
+        return tmp;
+    }
+
+    @ParameterizedTest(name = "HCN có chiều dài {0}, chiều rộng {1}, chu vi {2}")
+    @MethodSource("dataValidChuVi")
+    void nemRaException(double chieuDai, double chieuRong, double expectedChuVi) {
+        HinhChuNhat hcn = new HinhChuNhat();
+        hcn.setChieuRong(chieuRong);
+        hcn.setChieuDai(chieuDai);
+        Assertions.assertEquals(expectedChuVi, hcn.tinhChuVi(), 0.0001);
+    }
+
+    static Stream<Arguments> dataValid() throws IOException {
+        Reader in = new FileReader("C:\\Users\\BKACAD\\IdeaProjects\\JunitTestDemo\\src\\test\\resources\\dataTest.csv");
+        Stream<Arguments> tmp = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in)
+                .stream()
+                .skip(3)
+                .map(r -> Arguments.of(r.get(COL_CHIEU_DAI), r.get(COL_CHIEU_RONG), r.get(COL_CHU_VI), r.get(COL_DIEN_TICH))
+                );
+        return tmp;
+    }
+
+    @ParameterizedTest(name = "HCN có chiều dài {0}, chiều rộng {1}, chu vi {2}, dien tich {3}")
+    @MethodSource("dataValid")
+    void testChuViDienTich(double chieuDai, double chieuRong, double expectedChuVi, double expectedDienTich) {
+        HinhChuNhat hcn = new HinhChuNhat();
+        hcn.setChieuRong(chieuRong);
+        hcn.setChieuDai(chieuDai);
+        Assertions.assertAll(
+                () -> {
+                    Assertions.assertEquals(expectedChuVi, hcn.tinhChuVi(), 0.001);
+                },
+                () -> {
+                    Assertions.assertEquals(expectedDienTich, hcn.tinhDienTich(), 0.001);
+                }
+        );
+    }
+
+    // Lấy ra 1 số dòng cụ thể trong CSV: lấy dòng 5 va 6 để test diện tích ???
+    // skip: limit giới hạn
+    static Stream<Arguments> dataValidDienTichLine5_6() throws IOException {
+        Reader in = new FileReader("C:\\Users\\BKACAD\\IdeaProjects\\JunitTestDemo\\src\\test\\resources\\dataTest.csv");
+        List<CSVRecord> tmp = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in).getRecords();
+        System.out.println(tmp);
+        // Tính kích thước
+        long len = tmp.size() + 2;
+        // Dòng đầu header
+        long from = 5, to = 6;
+        Stream<Arguments> rs = tmp.stream().skip(len - from + 1).limit(to - from + 1)
+                .map(r -> Arguments.of(
+                        r.get(COL_CHIEU_DAI),
+                        r.get(COL_CHIEU_RONG),
+                        r.get(COL_DIEN_TICH)
+                ));
+        return rs;
+    }
+
+    public static void main(String[] args) throws IOException {
+        dataValidDienTichLine5_6();
+    }
+
+    @ParameterizedTest(name = "HCN có chiều dài {0}, chiều rộng {1}, dien tich {2}")
+    @MethodSource("dataValidDienTichLine5_6")
+    void testChuViDienTich(double chieuDai, double chieuRong, double expectedDienTich) {
+        HinhChuNhat hcn = new HinhChuNhat();
+        hcn.setChieuRong(chieuRong);
+        hcn.setChieuDai(chieuDai);
+        Assertions.assertEquals(expectedDienTich, hcn.tinhDienTich(), 0.001);
+    }
+
 
 }
