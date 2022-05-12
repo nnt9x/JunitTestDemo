@@ -1,0 +1,10 @@
+﻿user_name,email,password,md5_password,login,register
+User1,,abc$8Syk,2875b17dba985b42ab4f27c0b2796e3b,TRUE,
+user2_BKH,user2@bkacad.edu.com.vn,ab#0sSyxk,ca3d54fd0ab18f9c5be98b29be4acbd1,TRUE,
+,user3@gmail.com,abzse$8Syk,4b332ac03bb24520b64ba01ecdebf4dc,FALSE,
+8ahx$SSZX,,abzse$8Syk,4b332ac03bb24520b64ba01ecdebf4dc,FALSE,
+,,,,,
+,,,,,
+user4_BKC,user4@bkacad.edu.com.vn,ab#0sSyxk,,,TRUE
+user5_BKC,user5@outlook.com,ab#0sSyxks,,,FALSE
+3user,abc_user6@outlook.com,adce,,,FALSE
